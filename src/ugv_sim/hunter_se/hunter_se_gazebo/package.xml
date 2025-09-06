@@ -16,6 +16,22 @@
   <exec_depend>rviz2</exec_depend>
   <exec_depend>xacro</exec_depend>
   
+  <!-- Navigation dependencies -->
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_common</exec_depend>
+  <exec_depend>nav2_core</exec_depend>
+  <exec_depend>nav2_costmap_2d</exec_depend>
+  <exec_depend>nav2_map_server</exec_depend>
+  <exec_depend>nav2_planner</exec_depend>
+  <exec_depend>nav2_controller</exec_depend>
+  <exec_depend>nav2_recoveries</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_amcl</exec_depend>
+  <exec_depend>nav2_waypoint_follower</exec_depend>
+  <exec_depend>nav2_velocity_smoother</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
 
