@@ -11,28 +11,67 @@ Hunter SEロボットを使用したSLAM（Simultaneous Localization and Mapping
 
 ## 目次
 
-1. [環境設定](#環境設定)
+1. [セットアップ手順](#セットアップ手順)
 2. [パッケージ構成](#パッケージ構成)
 3. [SLAMによるマップ作成](#slamによるマップ作成)
 4. [自律ナビゲーション](#自律ナビゲーション)
 5. [トラブルシューティング](#トラブルシューティング)
 6. [パラメータ調整](#パラメータ調整)
 
-## 環境設定
+## セットアップ手順
 
-### 必要な依存関係
+### 1. 前提条件
+
+以下がインストールされていることを確認してください：
+- Ubuntu 22.04 LTS
+- ROS2 Humble
+
+### 2. リポジトリのクローン
 
 ```bash
-sudo apt update
-sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-slam-toolbox
+# ホームディレクトリに移動
+cd ~
+
+# リポジトリをクローン
+git clone https://github.com/a-okao/hunter_ws.git
+
+# ワークスペースディレクトリに移動
+cd hunter_ws
 ```
 
-### ワークスペースのビルド
+### 3. 必要な依存関係のインストール
 
 ```bash
-cd /home/iskhas/hunter_ws
+# システムパッケージの更新
+sudo apt update
+
+# ROS2ナビゲーション関連パッケージのインストール
+sudo apt install ros-humble-navigation2 ros-humble-nav2-bringup ros-humble-slam-toolbox ros-humble-gazebo-ros-pkgs
+```
+
+### 4. ワークスペースのビルド
+
+```bash
+# ワークスペースのビルド
 colcon build --packages-select hunter_se_description hunter_se_gazebo
+
+# 環境変数の設定
 source install/setup.bash
+
+# 自動的に環境変数を設定（オプション）
+echo "source ~/hunter_ws/install/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+### 5. セットアップの確認
+
+```bash
+# パッケージが正しく認識されているか確認
+ros2 pkg list | grep hunter_se
+
+# 以下が出力されることを確認：
+# hunter_se_description
+# hunter_se_gazebo
 ```
 
 ## パッケージ構成
