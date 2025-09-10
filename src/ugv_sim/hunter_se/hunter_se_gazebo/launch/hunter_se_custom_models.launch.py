@@ -39,11 +39,11 @@ def generate_launch_description():
         launch_arguments=gazebo_options_dict.items()
     )
 
-    # Robot spawn options
+    # Robot spawn options - positioned at x=-2, y=0, z=0.3
     car_sim_options = {
-        'start_x': '2',
-        'start_y': '2',
-        'start_z': '0.1',
+        'start_x': '-2',
+        'start_y': '0',
+        'start_z': '0.3',
         'start_yaw': '0',
         'pub_tf': 'true',
         'tf_freq': '100.0',
@@ -84,15 +84,15 @@ def generate_launch_description():
             description='Use simulation time if true'),
         DeclareLaunchArgument(
             'start_x',
-            default_value='2',
+            default_value='-2',
             description='Robot start X position'),
         DeclareLaunchArgument(
             'start_y',
-            default_value='2',
+            default_value='0',
             description='Robot start Y position'),
         DeclareLaunchArgument(
             'start_z',
-            default_value='0.1',
+            default_value='0.3',
             description='Robot start Z position'),
         DeclareLaunchArgument(
             'start_yaw',
