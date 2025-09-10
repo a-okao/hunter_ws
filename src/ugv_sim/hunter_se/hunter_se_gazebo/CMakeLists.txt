@@ -21,7 +21,7 @@ find_package(ament_cmake REQUIRED)
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
 install(
-  DIRECTORY launch xacro world scripts config maps
+  DIRECTORY launch xacro world scripts config maps meshes models
   DESTINATION share/${PROJECT_NAME}
 )
 if(BUILD_TESTING)
