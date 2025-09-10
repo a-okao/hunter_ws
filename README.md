@@ -7,14 +7,19 @@ Hunter SEロボットを使用したSLAM（Simultaneous Localization and Mapping
 - **ロボット**: Hunter SE（4輪独立ステアリング）
 - **センサー**: MID-360 LiDAR
 - **環境**: ROS2 Humble + Gazebo + Nav2
-- **機能**: SLAM、自律ナビゲーション、マップ作成・保存
+- **機能**: 
+  - SLAM（同時位置推定地図作成）
+  - 自律ナビゲーション・AtoB走行
+  - マップ作成・保存
+  - **カスタム3Dモデル環境（STL/DAE対応）**
+  - オリジナルワールド構築からSLAM・ナビゲーションまでの完全ワークフロー
 
 ## 目次
 
 1. [セットアップ手順](#セットアップ手順)
 2. [パッケージ構成](#パッケージ構成)
-3. [SLAMによるマップ作成](#slamによるマップ作成)
-4. [自律ナビゲーション](#自律ナビゲーション)
+3. [基本的なSLAMとナビゲーション](#基本的なslamとナビゲーション)
+4. [カスタム3Dモデル環境](#カスタム3dモデル環境)
 5. [トラブルシューティング](#トラブルシューティング)
 6. [パラメータ調整](#パラメータ調整)
 
@@ -94,7 +99,9 @@ hunter_ws/
 └── CLAUDE.md                          # AI運用原則
 ```
 
-## SLAMによるマップ作成
+## 基本的なSLAMとナビゲーション
+
+### SLAMによるマップ作成
 
 ### 1. SLAMシステムの起動
 
@@ -134,7 +141,7 @@ RViz2画面で以下を確認：
 ros2 run nav2_map_server map_saver_cli -f /home/iskhas/hunter_ws/src/ugv_sim/hunter_se/hunter_se_gazebo/maps/factory_map
 ```
 
-## 自律ナビゲーション
+### 自律ナビゲーション
 
 ### 1. ナビゲーションシステムの起動
 
@@ -245,6 +252,49 @@ ros2 topic echo /plan --once
    ros2 launch hunter_se_gazebo hunter_se_simulation_nav2.launch.py
    ```
 
+## カスタム3Dモデル環境
+
+### 概要
+
+STL/DAEファイルを使用してオリジナルの3D環境を構築し、その環境でSLAMとナビゲーションを実行できます。
+
+### 利用可能な起動モード
+
+1. **基本表示モード** - カスタムモデル環境の確認
+```bash
+ros2 launch hunter_se_gazebo hunter_se_custom_models.launch.py
+```
+
+2. **SLAMモード** - カスタム環境での地図作成
+```bash
+ros2 launch hunter_se_gazebo hunter_se_custom_models_slam.launch.py
+```
+
+3. **ナビゲーションモード** - 作成した地図での自律走行
+```bash
+ros2 launch hunter_se_gazebo hunter_se_custom_models_navigation.launch.py
+```
+
+### 基本ワークフロー
+
+1. **STL/DAEファイルをmeshesディレクトリに配置**
+2. **SLAMモードで地図作成**
+3. **地図保存**: `ros2 run nav2_map_server map_saver_cli -f your_map_name`
+4. **ナビゲーションモードで自律走行テスト**
+
+### 詳細なガイド
+
+カスタム3Dモデル環境の詳細な構築手順、設定方法、トラブルシューティングについては、以下の専用ガイドを参照してください：
+
+📖 **[CUSTOM_MODELS_GUIDE.md](./CUSTOM_MODELS_GUIDE.md)**
+
+このガイドには以下の内容が含まれています：
+- STL/DAEファイルの配置方法
+- 自動モデル生成スクリプトの使用方法
+- SLAMからナビゲーションまでの完全ワークフロー
+- 起動パラメータのカスタマイズ方法（スポーン位置調整など）
+- よくある問題のトラブルシューティング
+
 ## 利用可能な環境
 
 ### 1. 工場環境（factory.world）
@@ -255,6 +305,11 @@ ros2 topic echo /plan --once
 ### 2. 住宅環境（house.world）
 - 基本的な住宅レイアウト
 - シンプルな構造
+
+### 3. カスタム3Dモデル環境（custom_models.world）
+- STL/DAEファイルから構築したオリジナル環境
+- 完全にカスタマイズ可能な3D空間
+- SLAM・ナビゲーション完全対応
 
 ## よく使用するコマンド集
 
@@ -268,8 +323,12 @@ ros2 launch hunter_se_gazebo hunter_se_navigation_test.launch.py
 # 手動操作
 ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
-# マップ保存
+# マップ保存（基本環境）
 ros2 run nav2_map_server map_saver_cli -f ~/hunter_ws/src/ugv_sim/hunter_se/hunter_se_gazebo/maps/my_map
+
+# カスタムモデル環境起動
+ros2 launch hunter_se_gazebo hunter_se_custom_models_slam.launch.py
+ros2 launch hunter_se_gazebo hunter_se_custom_models_navigation.launch.py
 
 # トピック一覧
 ros2 topic list

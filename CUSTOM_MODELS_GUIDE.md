@@ -60,7 +60,7 @@ mkdir src/ugv_sim/hunter_se/hunter_se_gazebo/models/your_model_name
       <visual name="visual">
         <geometry>
           <mesh>
-            <uri>package://hunter_se_gazebo/meshes/stl/your_model.stl</uri>
+            <uri>file:///path/to/hunter_ws/src/ugv_sim/hunter_se/hunter_se_gazebo/meshes/stl/your_model.stl</uri>
             <scale>1.0 1.0 1.0</scale>
           </mesh>
         </geometry>
@@ -75,7 +75,7 @@ mkdir src/ugv_sim/hunter_se/hunter_se_gazebo/models/your_model_name
       <collision name="collision">
         <geometry>
           <mesh>
-            <uri>package://hunter_se_gazebo/meshes/stl/your_model.stl</uri>
+            <uri>file:///path/to/hunter_ws/src/ugv_sim/hunter_se/hunter_se_gazebo/meshes/stl/your_model.stl</uri>
             <scale>1.0 1.0 1.0</scale>
           </mesh>
         </geometry>
@@ -223,19 +223,34 @@ ros2 launch hunter_se_gazebo hunter_se_custom_models.launch.py
 
 1. **モデルが表示されない**
    - メッシュファイルのパスが正しいか確認
-   - URIが`package://hunter_se_gazebo/...`形式になっているか確認
+   - URIが`file://`絶対パス形式になっているか確認
+   - 例: `file:///home/user/hunter_ws/src/ugv_sim/hunter_se/hunter_se_gazebo/meshes/stl/model.stl`
 
-2. **モデルが期待した場所に表示されない**
+2. **ロボットがオブジェクトに重なってスタックする**
+   - スポーン位置を調整: `start_x:=-2 start_y:=0 start_z:=0.3`
+   - ワールド内のオブジェクト配置を確認
+   - カスタムスポーン位置での起動を試行
+
+3. **package://URIエラーが発生する**
+   - `package://`から`file://`絶対パスに変更
+   - GAZEBO_MODEL_PATH環境変数が正しく設定されているか確認
+
+4. **モデルが期待した場所に表示されない**
    - `<pose>`タグの値を確認
    - 座標系の理解（Gazeboは右手座標系）
 
-3. **テクスチャが適用されない**
+5. **テクスチャが適用されない**
    - DAEファイルの場合、テクスチャファイルが`meshes/textures/`にあるか確認
    - マテリアル設定が正しいか確認
 
-4. **物理演算が期待通りに動作しない**
+6. **物理演算が期待通りに動作しない**
    - 慣性モーメントの値が適切か確認
    - 衝突判定のメッシュが複雑すぎる場合は簡略化を検討
+
+7. **SLAMが正常に動作しない**
+   - ロボットの初期位置がオブジェクトと重ならないよう調整
+   - LiDARセンサーの動作確認
+   - nav2パラメータファイルの設定確認
 
 ### デバッグのヒント
 
@@ -386,6 +401,22 @@ ros2 launch hunter_se_gazebo hunter_se_custom_models_navigation.launch.py map:=/
 ```bash
 ros2 launch hunter_se_gazebo hunter_se_custom_models_navigation.launch.py \
     start_x:=5.0 start_y:=3.0 start_yaw:=1.57
+```
+
+### ロボットスポーン位置の調整
+
+**デフォルトスポーン位置:** `x=-2, y=0, z=0.3`
+
+この位置は以下の理由で選択されています：
+- fieldオブジェクト（原点配置）との衝突回避
+- 地面から適切な高さでの安全なスポーン
+- SLAM開始時の良好な視界確保
+
+**スポーン位置が不適切な場合の対処法：**
+```bash
+# カスタムスポーン位置での起動例
+ros2 launch hunter_se_gazebo hunter_se_custom_models_slam.launch.py \
+    start_x:=-5.0 start_y:=2.0 start_z:=0.5
 ```
 
 ## 既存のNav2機能との併用
